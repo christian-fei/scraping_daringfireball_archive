@@ -20,7 +20,8 @@ defmodule ScrapingDaringfireballArchive.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.0"},
-      {:floki, "~> 0.20.0"}
+      {:floki, "~> 0.20.0"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 end
