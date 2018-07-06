@@ -1,17 +1,17 @@
 defmodule ScrapingDaringfireballArchive do
-  def start_link do
+  def start_link() do
     case scrape_archive_links("https://daringfireball.net/archive/") do
-      {:ok, links} ->
-        IO.inspect(links)
+      {:ok, urls} ->
+        result = scrape_urls(urls)
 
-        result =
-          links
-          |> Enum.map(&Task.async(fn -> scrape_number_of_words(&1) end))
-          |> Enum.map(&Task.await(&1, 30000))
+        ok_tasks = result |> Enum.filter(&only_ok/1)
+        error_tasks = result |> Enum.filter(&only_error/1)
 
-        word_count = result
-        |> Enum.filter(&only_ok/1)
-        |> Enum.reduce(0, fn {:ok, url, words}, acc -> acc + length(words) end)
+        # IO.inspect(error_tasks)
+
+        word_count =
+          ok_tasks
+          |> Enum.reduce(0, fn {:ok, _url, words}, acc -> acc + length(words) end)
 
         {:ok, [word_count: word_count]}
 
@@ -26,16 +26,28 @@ defmodule ScrapingDaringfireballArchive do
   defp only_error({:error, _, _}), do: true
   defp only_error(_), do: false
 
+  def scrape_urls(urls) do
+    urls
+    |> Enum.map(&scrape_url/1)
+    |> Enum.map(&Task.await(&1, 30000))
+  end
+
+  def scrape_url(url) do
+    Task.async(fn -> scrape_number_of_words(url) end)
+  end
+
   def scrape_archive_links(url \\ "https://daringfireball.net/archive/") do
-    IO.puts("started scraping for links #{url}")
+    IO.puts("started scraping for url #{url}")
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        IO.puts("finished scraping for links #{url}")
-        {:ok, Parser.links(body)}
+        IO.puts("finished scraping for url #{url}")
+        {:ok, Parser.urls(body)}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
+
+        IO.inspect(reason)
 
         {:error, :connect_timeout}
 

@@ -1,9 +1,9 @@
 defmodule Parser do
-  def links(html) do
+  def urls(html) do
     html
     |> Floki.find(".archive p a")
-    |> Enum.filter(fn link ->
-      case link do
+    |> Enum.filter(fn el ->
+      case el do
         {"a", [{"href", _url}], [_text]} -> true
         _ -> false
       end
