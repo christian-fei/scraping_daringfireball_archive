@@ -3,15 +3,9 @@ defmodule ScrapingDaringfireballArchive do
     case Scraper.scrape_archive_links("https://daringfireball.net/archive/") do
       {:ok, urls} ->
         result = Scraper.scrape_urls(urls)
-
         error_tasks = result |> Enum.filter(&only_error/1)
-
-        error_urls =
-          error_tasks
-          |> Enum.map(fn {:error, url, _} -> url end)
-
+        error_urls = error_tasks |> Enum.map(fn {:error, url, _} -> url end)
         result = (result ++ Scraper.scrape_urls(error_urls)) |> Enum.filter(&only_ok/1)
-
         ok_tasks = result |> Enum.filter(&only_ok/1)
 
         word_count =
@@ -21,6 +15,7 @@ defmodule ScrapingDaringfireballArchive do
 
       {:error, err} ->
         IO.inspect(err)
+        {:error, err}
     end
   end
 
