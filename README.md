@@ -5,6 +5,7 @@
 for now, run it with:
 
 ```
+mix deps.get
 iex -S mix
 
 ScrapingDaringfireballArchive.start_link
