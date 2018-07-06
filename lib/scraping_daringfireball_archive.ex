@@ -11,14 +11,12 @@ defmodule ScrapingDaringfireballArchive do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, Parser.links(body)}
 
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
-        IO.puts("Not found :(")
-
       {:error, %HTTPoison.Error{reason: reason}} ->
-        IO.inspect(reason)
+        {:error, reason}
 
       _ ->
         IO.puts("Shit")
+        {:error, "unhandled"}
     end
   end
 
