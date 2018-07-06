@@ -1,21 +1,27 @@
 # ScrapingDaringfireballArchive
 
-**TODO: Add description**
+> inspiration from: http://www.akitaonrails.com/2015/11/18/ex-manga-downloader-an-exercise-with-elixir
 
-## Installation
+for now, run it with:
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `scraping_daringfireball_archive` to your list of dependencies in `mix.exs`:
+```
+iex -S mix
 
-```elixir
-def deps do
-  [
-    {:scraping_daringfireball_archive, "~> 0.1.0"}
-  ]
-end
+ScrapingDaringfireballArchive.start_link
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/scraping_daringfireball_archive](https://hexdocs.pm/scraping_daringfireball_archive).
+you should see something like:
 
+```
+...
+finished scraping for words https://daringfireball.net/2012/01/ima_set_it_straight_this_watergate
+finished scraping for words https://daringfireball.net/2012/09/iphone_5
+finished scraping for words https://daringfireball.net/2011/10/iphone_4s
+finished scraping for words https://daringfireball.net/2012/03/ipad_3
+finished scraping for words https://daringfireball.net/2012/11/seriously_apple_is_doomed
+finished scraping for words https://daringfireball.net/2012/08/pixel_perfect
+finished scraping for words https://daringfireball.net/2012/02/walter_isaacson_steve_jobs
+finished scraping for words https://daringfireball.net/2012/02/mountain_lion
+{:ok, [word_count: 338145]}
+iex(23)>
+```
