@@ -9,13 +9,11 @@ defmodule ScrapingDaringfireballArchive do
           |> Enum.map(&Task.async(fn -> scrape_number_of_words(&1) end))
           |> Enum.map(&Task.await(&1, 30000))
 
-        IO.inspect(result)
-
-        result
+        word_count = result
         |> Enum.filter(&only_ok/1)
-        |> IO.inspect()
+        |> Enum.reduce(0, fn {:ok, url, words}, acc -> acc + length(words) end)
 
-        {:ok, result}
+        {:ok, [word_count: word_count]}
 
       {:error, err} ->
         IO.inspect(err)
