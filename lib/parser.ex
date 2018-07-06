@@ -2,7 +2,6 @@ defmodule Parser do
   def links(html) do
     html
     |> Floki.find(".archive p a")
-    |> Enum.take(5)
     |> Enum.filter(fn link ->
       case link do
         {"a", [{"href", _url}], [_text]} -> true
@@ -14,5 +13,12 @@ defmodule Parser do
         href: Floki.attribute(item, "href") |> List.first()
       }
     end)
+  end
+
+  def words(html) do
+    html
+    |> Floki.find(".article")
+    |> Floki.text()
+    |> String.split(" ")
   end
 end

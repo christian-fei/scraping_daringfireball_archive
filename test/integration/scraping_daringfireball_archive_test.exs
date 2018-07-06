@@ -19,17 +19,19 @@ defmodule ScrapingDaringfireballArchiveTest do
       assert called(HTTPoison.get("https://daringfireball.net/archive/"))
 
       assert(
-        response == {:ok, [
-          %{href: "https://daringfireball.net/2018/06/google_demos_duplex"},
-          %{href: "https://daringfireball.net/2018/05/10_strikes_and_youre_out"},
-          %{
-            href: "https://daringfireball.net/2018/05/yammering_on_regarding_google_duplex"
-          },
-          %{href: "https://daringfireball.net/2018/05/duplex_booked_restaurant"},
-          %{
-            href: "https://daringfireball.net/2018/05/the_end_of_third_party_twitter_clients"
-          }
-        ]}
+        response ==
+          {:ok,
+           [
+             %{href: "https://daringfireball.net/2018/06/google_demos_duplex"},
+             %{href: "https://daringfireball.net/2018/05/10_strikes_and_youre_out"},
+             %{
+               href: "https://daringfireball.net/2018/05/yammering_on_regarding_google_duplex"
+             },
+             %{href: "https://daringfireball.net/2018/05/duplex_booked_restaurant"},
+             %{
+               href: "https://daringfireball.net/2018/05/the_end_of_third_party_twitter_clients"
+             }
+           ]}
       )
     end
   end
