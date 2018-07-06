@@ -14,12 +14,12 @@ defmodule ScrapingDaringfireballArchiveTest do
 
     with_mock HTTPoison,
       get: fn _url -> {:ok, %HTTPoison.Response{status_code: 200, body: body}} end do
-      links = ScrapingDaringfireballArchive.start_link()
+      response = ScrapingDaringfireballArchive.start_link()
 
       assert called(HTTPoison.get("https://daringfireball.net/archive/"))
 
       assert(
-        links == [
+        response == {:ok, [
           %{href: "https://daringfireball.net/2018/06/google_demos_duplex"},
           %{href: "https://daringfireball.net/2018/05/10_strikes_and_youre_out"},
           %{
@@ -29,7 +29,7 @@ defmodule ScrapingDaringfireballArchiveTest do
           %{
             href: "https://daringfireball.net/2018/05/the_end_of_third_party_twitter_clients"
           }
-        ]
+        ]}
       )
     end
   end
