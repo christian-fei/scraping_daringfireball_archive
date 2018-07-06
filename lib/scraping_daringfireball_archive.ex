@@ -2,10 +2,18 @@ defmodule ScrapingDaringfireballArchive do
   def start_link do
     case scrape_archive_links("https://daringfireball.net/archive/") do
       {:ok, links} ->
+        IO.inspect(links)
+
         result =
           links
           |> Enum.map(&Task.async(fn -> scrape_number_of_words(&1) end))
           |> Enum.map(&Task.await(&1, 30000))
+
+        IO.inspect(result)
+
+        result
+        |> Enum.filter(&only_ok/1)
+        |> IO.inspect()
 
         {:ok, result}
 
@@ -13,6 +21,12 @@ defmodule ScrapingDaringfireballArchive do
         IO.inspect(err)
     end
   end
+
+  defp only_ok({:ok, _url, _words}), do: true
+  defp only_ok(_), do: false
+
+  defp only_error({:error, _, _}), do: true
+  defp only_error(_), do: false
 
   def scrape_archive_links(url \\ "https://daringfireball.net/archive/") do
     IO.puts("started scraping for links #{url}")

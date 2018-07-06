@@ -21,4 +21,8 @@ defmodule Parser do
     |> Floki.text()
     |> String.split(" ")
   end
+
+  def count_words(words) do
+    length(words)
+  end
 end
