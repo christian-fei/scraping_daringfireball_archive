@@ -8,11 +8,7 @@ defmodule Parser do
         _ -> false
       end
     end)
-    |> Enum.map(fn item ->
-      %{
-        href: Floki.attribute(item, "href") |> List.first()
-      }
-    end)
+    |> Enum.map(fn item -> Floki.attribute(item, "href") |> List.first() end)
   end
 
   def words(html) do

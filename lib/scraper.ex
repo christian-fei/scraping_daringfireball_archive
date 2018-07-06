@@ -29,10 +29,6 @@ defmodule Scraper do
     end
   end
 
-  def scrape_number_of_words(%{href: url}) do
-    scrape_number_of_words(url)
-  end
-
   def scrape_number_of_words(url) do
     IO.puts("started scraping for words #{url}")
 

@@ -9,21 +9,11 @@ defmodule ParserTest do
 
     assert(
       Parser.urls(html) == [
-        %{
-          href: "https://daringfireball.net/2018/06/google_demos_duplex"
-        },
-        %{
-          href: "https://daringfireball.net/2018/05/10_strikes_and_youre_out"
-        },
-        %{
-          href: "https://daringfireball.net/2018/05/yammering_on_regarding_google_duplex"
-        },
-        %{
-          href: "https://daringfireball.net/2018/05/duplex_booked_restaurant"
-        },
-        %{
-          href: "https://daringfireball.net/2018/05/the_end_of_third_party_twitter_clients"
-        }
+        "https://daringfireball.net/2018/06/google_demos_duplex",
+        "https://daringfireball.net/2018/05/10_strikes_and_youre_out",
+        "https://daringfireball.net/2018/05/yammering_on_regarding_google_duplex",
+        "https://daringfireball.net/2018/05/duplex_booked_restaurant",
+        "https://daringfireball.net/2018/05/the_end_of_third_party_twitter_clients"
       ]
     )
   end
