@@ -1,17 +1,21 @@
 defmodule ScrapingDaringfireballArchive do
   def start_link() do
-    case scrape_archive_links("https://daringfireball.net/archive/") do
+    case Scraper.scrape_archive_links("https://daringfireball.net/archive/") do
       {:ok, urls} ->
-        result = scrape_urls(urls)
+        result = Scraper.scrape_urls(urls)
 
-        ok_tasks = result |> Enum.filter(&only_ok/1)
         error_tasks = result |> Enum.filter(&only_error/1)
 
-        # IO.inspect(error_tasks)
+        error_urls =
+          error_tasks
+          |> Enum.map(fn {:error, url, _} -> url end)
+
+        result = (result ++ Scraper.scrape_urls(error_urls)) |> Enum.filter(&only_ok/1)
+
+        ok_tasks = result |> Enum.filter(&only_ok/1)
 
         word_count =
-          ok_tasks
-          |> Enum.reduce(0, fn {:ok, _url, words}, acc -> acc + length(words) end)
+          ok_tasks |> Enum.reduce(0, fn {:ok, _url, words}, acc -> acc + length(words) end)
 
         {:ok, [word_count: word_count]}
 
@@ -25,53 +29,4 @@ defmodule ScrapingDaringfireballArchive do
 
   defp only_error({:error, _, _}), do: true
   defp only_error(_), do: false
-
-  def scrape_urls(urls) do
-    urls
-    |> Enum.map(&scrape_url/1)
-    |> Enum.map(&Task.await(&1, 30000))
-  end
-
-  def scrape_url(url) do
-    Task.async(fn -> scrape_number_of_words(url) end)
-  end
-
-  def scrape_archive_links(url \\ "https://daringfireball.net/archive/") do
-    IO.puts("started scraping for url #{url}")
-
-    case HTTPoison.get(url) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        IO.puts("finished scraping for url #{url}")
-        {:ok, Parser.urls(body)}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-
-        IO.inspect(reason)
-
-        {:error, :connect_timeout}
-
-      _ ->
-        IO.puts("Shit")
-        {:error, "unhandled"}
-    end
-  end
-
-  def scrape_number_of_words(%{href: url}) do
-    IO.puts("started scraping for words #{url}")
-
-    case HTTPoison.get(url) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        words = Parser.words(body)
-        IO.puts("finished scraping for words #{url}")
-        {:ok, url, words}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, url, reason}
-
-      _ ->
-        IO.puts("Shit")
-        {:error, url, "unhandled"}
-    end
-  end
 end
